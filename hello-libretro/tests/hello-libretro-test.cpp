@@ -1,11 +1,13 @@
+#include "libretro.h"
+
 #include "gtest/gtest.h"
 
-TEST (MyFirstTests, WillPass) {
-    EXPECT_EQ (true, true);
+TEST (RetroInit, Exists) {
+    retro_init();
 }
 
-TEST (MyFirstTests, WillFail) {
-    EXPECT_EQ (true, false);
+TEST (RetroDeinit, Exists) {
+    retro_deinit();
 }
 
 int main(int argc, char* argv[]) {

@@ -1,5 +1,4 @@
-//
-// Created by zap_rowsdower on 10/17/20.
-//
+#include "libretro.h"
 
-#include "../include/libretro.h"
+RETRO_API void retro_init(void) {}
+RETRO_API void retro_deinit(void) {}
