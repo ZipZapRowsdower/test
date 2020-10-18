@@ -6,8 +6,8 @@ project(hello-libretro
 
 set(CMAKE_CXX_STANDARD 14)
 
-enable_testing()
-include(GoogleTest)
 add_subdirectory(googletest)
+include_directories(googletest/googletest/include/)
+enable_testing()
 
 add_subdirectory(hello-libretro)

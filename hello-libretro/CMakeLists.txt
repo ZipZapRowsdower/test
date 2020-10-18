@@ -1,6 +1,6 @@
-add_library(hello-libretro SHARED src/libretro.cpp)
+include_directories(include)
 
-target_include_directories(hello-libretro PRIVATE include)
+add_library(hello-libretro SHARED src/libretro.cpp)
 
 set_target_properties(hello-libretro PROPERTIES PUBLIC_HEADER include/libretro.h)
 
