@@ -2,6 +2,9 @@
 
 #include "libretro.h"
 
+static retro_video_refresh_t video_cb;
+static retro_audio_sample_t audio_cb;
+
 RETRO_API void retro_init(void) {}
 RETRO_API void retro_deinit(void) {}
 
@@ -23,19 +26,36 @@ RETRO_API void retro_get_system_av_info(struct retro_system_av_info *info) {
     info->geometry.max_height = 400;
     info->geometry.max_width = 400;
     info->timing.fps = 60.0;
-    info->timing.sample_rate = 0.;
+    info->timing.sample_rate = 44100;
 }
 
 RETRO_API void retro_set_environment(retro_environment_t environment) {}
-RETRO_API void retro_set_video_refresh(retro_video_refresh_t videoRefresh) {}
-RETRO_API void retro_set_audio_sample(retro_audio_sample_t audioSample) {}
+RETRO_API void retro_set_video_refresh(retro_video_refresh_t videoRefresh) {
+    video_cb = videoRefresh;
+}
+RETRO_API void retro_set_audio_sample(retro_audio_sample_t audioSample){
+    audio_cb = audioSample;
+}
 RETRO_API void retro_set_audio_sample_batch(retro_audio_sample_batch_t audioSampleBatch) {}
 RETRO_API void retro_set_input_poll(retro_input_poll_t inputPoll) {}
 RETRO_API void retro_set_input_state(retro_input_state_t inputState) {}
 RETRO_API void retro_set_controller_port_device(unsigned port, unsigned device) {}
 
 RETRO_API void retro_reset(void) {}
-RETRO_API void retro_run(void) {}
+RETRO_API void retro_run(void) {
+    unsigned short framebuffer[400 * 400];
+    for (int i = 0; i < 200 * 400; i++) framebuffer[i] = 0x001F;
+    for (int i = 200 * 400; i < 300 * 400; i++) framebuffer[i] = 0x03E0;
+    for (int i = 300 * 400; i < 400 * 400; i++) framebuffer[i] = 0x7C00;
+    video_cb(framebuffer, 400, 400, sizeof(unsigned short) * 400);
+
+    // 420 Hz Triangle wave (7 cycles per frame, 60 frames per second
+    for (int j = 0; j < 7; j++) {
+        // 735 iterations per frame to reach 44.100 kHz sampling @ 60 fps
+        for (int i = 0; i < 52; i++) audio_cb(i * 1260, i * 1260);
+        for (int i = 0; i < 53; i++) audio_cb(65535 - i * 1260, 65535 - i * 1260);
+    }
+}
 
 RETRO_API size_t retro_serialize_size(void) {return 1;}
 RETRO_API bool retro_serialize(void *data, size_t size)
