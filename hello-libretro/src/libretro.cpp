@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "libretro.h"
 
 RETRO_API void retro_init(void) {}
@@ -5,8 +7,24 @@ RETRO_API void retro_deinit(void) {}
 
 RETRO_API unsigned retro_api_version(void) { return RETRO_API_VERSION; }
 
-RETRO_API void retro_get_system_info(struct retro_system_info *info) {}
-RETRO_API void retro_get_system_av_info(struct retro_system_av_info *info) {}
+RETRO_API void retro_get_system_info(struct retro_system_info *info) {
+    memset(info, 0, sizeof(*info));
+    info->library_name = "lib-retro";
+    info->library_version = "1.0.0";
+    info->valid_extensions = "";
+    info->need_fullpath = false;
+    info->block_extract = false;
+}
+RETRO_API void retro_get_system_av_info(struct retro_system_av_info *info) {
+    memset(info, 0, sizeof(*info));
+    info->geometry.aspect_ratio = 1.0;
+    info->geometry.base_height = 400;
+    info->geometry.base_width = 400;
+    info->geometry.max_height = 400;
+    info->geometry.max_width = 400;
+    info->timing.fps = 60.0;
+    info->timing.sample_rate = 0.;
+}
 
 RETRO_API void retro_set_environment(retro_environment_t environment) {}
 RETRO_API void retro_set_video_refresh(retro_video_refresh_t videoRefresh) {}

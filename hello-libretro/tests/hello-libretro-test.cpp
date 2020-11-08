@@ -16,14 +16,26 @@ TEST (RetroApiVersion, ReturnsPublicAPIVersion) {
     EXPECT_EQ (version, RETRO_API_VERSION);
 }
 
-TEST (RetroGetSystemInfo, Exists) {
-    retro_system_info* info;
+TEST (RetroGetSystemInfo, SetsProperVariables) {
+    retro_system_info* info = (retro_system_info*) malloc(sizeof(retro_system_info));
     retro_get_system_info(info);
+    EXPECT_STREQ(info->library_name, "lib-retro");
+    EXPECT_STREQ(info->library_version, "1.0.0");
+    EXPECT_STREQ(info->valid_extensions, "");
+    EXPECT_EQ(info->need_fullpath,  false);
+    EXPECT_EQ(info->block_extract, false);
 }
 
-TEST (RetroGetSystemAvInfo, Exists) {
-    retro_system_av_info* info;
+TEST (RetroGetSystemAvInfo, SetsProperVariables) {
+    retro_system_av_info* info = (retro_system_av_info*) malloc(sizeof(retro_system_av_info));
     retro_get_system_av_info(info);
+    EXPECT_FLOAT_EQ(info->geometry.aspect_ratio, 1.0);
+    EXPECT_EQ(info->geometry.base_height, 400);
+    EXPECT_EQ(info->geometry.base_width, 400);
+    EXPECT_EQ(info->geometry.max_height, 400);
+    EXPECT_EQ(info->geometry.max_width, 400);
+    EXPECT_FLOAT_EQ(info->timing.fps, 60.0);
+    EXPECT_FLOAT_EQ(info->timing.sample_rate, 0.0);
 }
 
 TEST (RetroSetEnvironment, Exists) {
